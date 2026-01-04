@@ -142,9 +142,16 @@ function createTrials(block_type, n_trials, fixed_task=null){
         local_letter: local_letter
       },
       on_finish: function(data){
-        const correct = (data.task==="global") ? data.global_letter.toLowerCase() : data.local_letter.toLowerCase();
-        data.correct = (data.response.toLowerCase() === correct) ? 1 : 0;
-      }
+  const correctAnswer = (data.task === "global") ? data.global_letter.toLowerCase() : data.local_letter.toLowerCase();
+  
+  if (data.response === null) {
+    data.correct = 0;   
+    data.response = "";  
+  } else {
+    data.correct = (data.response.toLowerCase() === correctAnswer) ? 1 : 0;
+  }
+}
+
     });
   }
   return trials;
