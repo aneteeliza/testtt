@@ -131,7 +131,7 @@ function createTrials(block_type, n_trials, fixed_task=null){
     trials.push({
       type: "html-keyboard-response",
       stimulus: generateNavonHTML(global_letter, local_letter),
-      choices: ["1","2"],
+      choices: ["H","S"],
       trial_duration: 1500,
       data: {
         block: block_type,
@@ -142,9 +142,8 @@ function createTrials(block_type, n_trials, fixed_task=null){
         local_letter: local_letter
       },
       on_finish: function(data){
-        const correct = (data.task==="global" && data.global_letter==="H") || 
-                        (data.task==="local" && data.local_letter==="H") ? "1" : "2";
-        data.correct = (data.response===correct)?1:0;
+        const correct = (data.task==="global") ? data.global_letter : data.local_letter;
+        data.correct = (data.response === correct) ? 1 : 0;
       }
     });
   }
@@ -195,7 +194,7 @@ timeline.push({
   stimulus: `
     <h2>Neivona uzdevums</h2>
     <p>Vēro burtus, kas parādīsies uz ekrāna.</p>
-    <p>Atbildi: "H" = 1, "S" = 2</p>
+    <p>Spied H, ja redzi H, ja S, tad S</p>
     <p>Atbildes jāsniedz ātri, jo limits ir 1,5 sekundes.</p>
     <p>Nospied SPACE, lai sāktu eksperimentu.</p>
   `,
@@ -209,7 +208,7 @@ timeline.push({
     <h2>Globālais bloks</h2>
     <p>Fokusējies uz LIELAJIEM burtiem.</p>
     <p>Ignorē mazos burtiņus.</p>
-    <p>H = 1, S = 2</p>
+    <p>Spied H, ja redzi H, ja S, tad S</p>
     <p>Nospied SPACE, lai sāktu.</p>
   `,
   choices: [" "],
@@ -223,7 +222,7 @@ timeline.push({
     <h2>Lokālais bloks</h2>
     <p>Fokusējies uz MAZAJIEM burtiem.</p>
     <p>Ignorē lielos burtiņus.</p>
-    <p>H = 1, S = 2</p>
+    <p>Spied H, ja redzi H, ja S, tad S</p>
     <p>Nospied SPACE, lai sāktu.</p>
   `,
   choices: [" "],
@@ -238,7 +237,7 @@ timeline.push({
     <p>Pirms katra uzdevuma ir bultiņa:</p>
     <p>↑ - fokusējies uz globālo (lielo) burtu</p>
     <p>↓ - fokusējies uz lokālo (mazo) burtu</p>
-    <p>H = 1, S = 2</p>
+    <p>Spied H, ja redzi H, ja S, tad S</p>
     <p>Nospied SPACE, lai sāktu.</p>
   `,
   choices: [" "],
