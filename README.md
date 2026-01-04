@@ -1,3 +1,5 @@
+Google sheet: https://docs.google.com/spreadsheets/d/1Cd2O13E66cZqwp0sTtFdzHk33glmjeboRr13hsL30HA/edit?usp=sharing
+
 App Script:
 
 const SPREADSHEET_ID = "1Cd2O13E66cZqwp0sTtFdzHk33glmjeboRr13hsL30HA";
