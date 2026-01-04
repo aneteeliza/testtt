@@ -151,6 +151,44 @@ function createTrials(block_type, n_trials, fixed_task=null){
   return trials;
 }
 
+function saveData() {
+  const columns = [
+    "participant_id",
+    "timestamp",
+    "block",
+    "trial",
+    "condition",
+    "task",
+    "global_letter",
+    "local_letter",
+    "response",
+    "correct",
+    "rt"
+  ];
+
+  const rows = jsPsych.data.get()
+          .filterCustom(d => d.trial_type === "html-keyboard-response" && !d.ignore)
+          .values()
+          .map(r => {
+            let obj = {};
+            columns.forEach(c => obj[c] = r[c] ?? "");
+            return obj;
+          });
+
+  fetch(GOOGLE_SHEETS_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "text/plain"
+    },
+    body: JSON.stringify(rows)
+  }).then(() => {
+    console.log("Data sent to sheet");
+  }).catch(error => {
+    console.error("Error sending data:", error);
+  });
+}
+
 let timeline = [];
 
 timeline.push({
@@ -212,13 +250,8 @@ timeline.push(...createTrials("mixed", N_TRIALS_MIXED));
 timeline.push({
   type: "html-keyboard-response",
   stimulus: function () {
-
     const trials = jsPsych.data.get()
-      .filterCustom(d =>
-        d.trial_type === "html-keyboard-response" &&
-        !d.ignore &&
-        d.block
-      );
+      .filterCustom(d => d.trial_type === "html-keyboard-response" && !d.ignore && d.block);
 
     function blockAccuracy(blockName) {
       const blockTrials = trials.filter({ block: blockName });
@@ -229,66 +262,27 @@ timeline.push({
     const globalAcc = blockAccuracy("global");
     const localAcc  = blockAccuracy("local");
     const mixedAcc  = blockAccuracy("mixed");
-
-    const meanRT = Math.round(
-      trials.filter({ correct: 1 }).select("rt").mean()
-    );
+    const meanRT = Math.round(trials.filter({ correct: 1 }).select("rt").mean());
 
     return `
       <h2>Paldies par dalību!</h2>
-
       <h3>Precizitāte pa blokiem</h3>
       <p><strong>Globālais bloks:</strong> ${globalAcc}</p>
       <p><strong>Lokālais bloks:</strong> ${localAcc}</p>
       <p><strong>Mixed bloks:</strong> ${mixedAcc}</p>
-
-      <p style="margin-top:15px;">
-        <strong>Vidējais reakcijas laiks:</strong> ${meanRT} ms
-      </p>
+      <p style="margin-top:15px;"><strong>Vidējais reakcijas laiks:</strong> ${meanRT} ms</p>
     `;
+  },
+  on_load: function() {
+    saveData();
   },
   choices: jsPsych.NO_KEYS,
   data: { ignore: true }
 });
 
-
 jsPsych.init({
-  timeline: timeline,
-  on_finish: function(){
-    const columns = [
-      "participant_id",
-      "timestamp",
-      "block",
-      "trial",
-      "condition",
-      "task",
-      "global_letter",
-      "local_letter",
-      "response",
-      "correct",
-      "rt"
-    ];
-
-    const rows = jsPsych.data.get()
-      .filterCustom(d => d.trial_type==="html-keyboard-response" && !d.ignore)
-      .values()
-      .map(r => {
-        let obj = {};
-        columns.forEach(c => obj[c] = r[c] ?? "");
-        return obj;
-      });
-
-      fetch(GOOGLE_SHEETS_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(rows)
-      });
-  }
+  timeline: timeline
 });
-
-
 </script>
 
 </body>
