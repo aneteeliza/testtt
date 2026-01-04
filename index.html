@@ -131,7 +131,7 @@ function createTrials(block_type, n_trials, fixed_task=null){
     trials.push({
       type: "html-keyboard-response",
       stimulus: generateNavonHTML(global_letter, local_letter),
-      choices: ["H","S"],
+      choices: ["h","H","s","S"],
       trial_duration: 1500,
       data: {
         block: block_type,
@@ -143,7 +143,7 @@ function createTrials(block_type, n_trials, fixed_task=null){
       },
       on_finish: function(data){
         const correct = (data.task==="global") ? data.global_letter : data.local_letter;
-        data.correct = (data.response === correct) ? 1 : 0;
+        data.correct = (data.response.toUpperCase() === correct) ? 1 : 0;
       }
     });
   }
