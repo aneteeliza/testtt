@@ -12,7 +12,16 @@ function doPost(e) {
   rows.forEach(r => {
     sheet.appendRow([
       r.participant_id,
-      r.timestamp
+      r.timestamp,
+      r.block, 
+      r.trial, 
+      r.condition, 
+      r.task, 
+      r.global_letter, 
+      r.local_letter, 
+      r.response, 
+      r.correct, 
+      r.rt
     ]);
   });
 
