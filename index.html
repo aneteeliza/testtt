@@ -37,7 +37,7 @@
 
 <script>
 
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbw-ZPg3FqBHjQ2CLrBKpO-iGcVKrcuxLMhurJ9T_Og1fb7bkvqLQBy02_dT4qMi4Tr1Bg/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxeNwAiyIZQZJ6iMkwZ44yMFJ1H3oT5nUWNjzPUKzMeQFVE7Y3c0-xz6-CGbB63cwg96g/exec";
 
 function generateParticipantID() {
   return "NAVON-" + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -178,7 +178,7 @@ function saveData() {
   fetch(GOOGLE_SHEETS_URL, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "text/plain"
     },
     body: JSON.stringify(rows)
   }).then(() => {
